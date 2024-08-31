@@ -59,7 +59,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\DevIL.cs" />
     <Compile Include="Converters\DLCtoLava.cs" />
+    <Compile Include="Converters\ImageHeaders.cs" />
     <Compile Include="Converters\RBN2toRBN1.cs" />
     <Compile Include="Converters\STFStoWii.cs" />
     <Compile Include="Converters\XboxPNGtoWiiPNG.cs" />
@@ -143,4 +145,7 @@
     <Content Include="LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>xcopy "$(SolutionDir)\Converters\lib" "$(TargetDir)" /F /R /Y /I /E</PreBuildEvent>
+  </PropertyGroup>
 </Project>

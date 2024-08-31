@@ -9,6 +9,7 @@ using DtxCS.DataTypes;
 using DtxCS;
 using System.IO;
 using Microsoft.VisualBasic.FileIO;
+using System.Windows.Forms;
 
 namespace LavaManager.Converters
 {
@@ -18,6 +19,7 @@ namespace LavaManager.Converters
         private DataArray songs;
         private string tempPath;
         private string output;
+        private readonly string wimgt;
 
         public STFStoWii(string stfsPath, string outPath)
         {
@@ -29,6 +31,8 @@ namespace LavaManager.Converters
             else
                 tempPath = Program.TempDir + songs.Array(0).Name;
             Directory.CreateDirectory(tempPath);
+            wimgt = Application.StartupPath + "\\wimgt.exe";
+            
         }
 
         public int SongCount()
@@ -84,7 +88,12 @@ namespace LavaManager.Converters
 
         public void ConvertPNG(int songIndex)
         {
-            // Todo
+            string shortname = Shortname(songIndex);
+            // Directory.CreateDirectory($"{tempPath}/songs/{shortname}/gen"); // should have already been created a this point
+            File.WriteAllBytes($"{tempPath}/songs/{shortname}/gen/{shortname}_keep.png_xbox", stfs.GetFile($"songs/{shortname}/gen/{shortname}_keep.png_xbox").GetBytes());
+            XboxPNGtoWiiPNG xboxPNGtoWiiPNG = new XboxPNGtoWiiPNG();
+            xboxPNGtoWiiPNG.ConvertImagetoWii(wimgt, $"{tempPath}/songs/{shortname}/gen/{shortname}_keep.png_xbox", $"{tempPath}/songs/{shortname}/gen/{shortname}_keep.png_wii", true);
+            Directory.Delete($"{tempPath}/songs/{shortname}/gen/converted", true);
         }
 
         public void DestroyTemp()
